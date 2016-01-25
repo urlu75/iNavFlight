@@ -15,34 +15,12 @@
  * along with Cleanflight.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #pragma once
 
-#define USE_SERVOS
-#define USE_CLI
-#define SERIAL_RX
-#define BLACKBOX
+void initIbusTelemetry(telemetryConfig_t *);
 
-#if (FLASH_SIZE > 64)
-#define GPS
-#define GPS_PROTO_NMEA
-#define GPS_PROTO_UBLOX
-#define GPS_PROTO_I2C_NAV
-#define GPS_PROTO_NAZA
+void handleIbusTelemetry(void);
+void checkIbusTelemetryState(void);
 
-#define TELEMETRY
-#define TELEMETRY_FRSKY
-#define TELEMETRY_HOTT
-#define TELEMETRY_SMARTPORT
-#define TELEMETRY_LTM
-#define TELEMETRY_IBUS
-#endif
-
-#if (FLASH_SIZE > 128)
-#define DISPLAY
-#define DISPLAY_ARMED_BITMAP
-#else
-#define SKIP_CLI_COMMAND_HELP
-#define SKIP_RX_MSP
-#define DISABLE_UNCOMMON_MIXERS
-#endif
+void configureIbusTelemetryPort(void);
+void freeIbusTelemetryPort(void);
