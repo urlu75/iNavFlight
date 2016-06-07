@@ -87,6 +87,8 @@
 #include "config/config_profile.h"
 #include "config/config_master.h"
 
+#include "drivers/io_pca9685.h"
+
 // June 2013     V2.2-dev
 
 enum {
@@ -695,6 +697,15 @@ void taskUpdateRxMain(void)
     processRx();
     updatePIDCoefficients(&currentProfile->pidProfile, currentControlRateProfile, &masterConfig.rxConfig);
     isRXDataNew = true;
+
+    // debug[0] = isPca9685Enabled();
+
+    if (isPca9685Enabled()) {
+        // debug[1] = 7;
+        // debug[2] = rcData[THROTTLE];
+        pca9685setServoPulse(0, rcData[THROTTLE]);
+    }
+
 }
 
 #ifdef GPS
