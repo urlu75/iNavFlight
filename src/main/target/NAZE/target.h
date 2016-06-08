@@ -204,6 +204,8 @@
 #define DEFAULT_FEATURES        FEATURE_VBAT
 #define DEFAULT_RX_FEATURE      FEATURE_RX_PPM
 
+#define USE_PCA9685
+
 // Disable HOTT and S.Port telemetry
 #undef TELEMETRY_HOTT
 #undef TELEMETRY_SMARTPORT
