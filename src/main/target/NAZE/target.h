@@ -204,7 +204,7 @@
 #define DEFAULT_FEATURES        FEATURE_VBAT
 #define DEFAULT_RX_FEATURE      FEATURE_RX_PPM
 
-#define USE_PCA9685
+#define USE_PMW_SERVO_DRIVER
 
 // Disable HOTT and S.Port telemetry
 #undef TELEMETRY_HOTT
