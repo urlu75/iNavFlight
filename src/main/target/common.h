@@ -51,4 +51,3 @@
 #define SKIP_RX_MSP
 #define DISABLE_UNCOMMON_MIXERS
 #endif
-

@@ -87,6 +87,7 @@
 #include "config/config_profile.h"
 #include "config/config_master.h"
 
+#include "io/pwmdriver_i2c.h"
 #include "drivers/io_pca9685.h"
 
 // June 2013     V2.2-dev
@@ -781,7 +782,7 @@ void taskLedStrip(void)
 void taskSyncPwmDriver(void) {
 
     if (feature(FEATURE_PWM_SERVO_DRIVER)) {
-        pca9685sync();
+        pwmDriverSync();
     }
 }
 #endif
