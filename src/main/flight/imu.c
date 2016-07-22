@@ -304,8 +304,8 @@ static void imuMahonyAHRSupdate(float dt, float gx, float gy, float gz,
     if (accWeight > 0) {
         float kpAcc = imuRuntimeConfig->dcm_kp_acc * imuGetPGainScaleFactor();
 
-        // Just scale by 1G length - That's our vector adjustment. Rather than 
-        // using one-over-exact length (which needs a costly square root), we already 
+        // Just scale by 1G length - That's our vector adjustment. Rather than
+        // using one-over-exact length (which needs a costly square root), we already
         // know the vector is enough "roughly unit length" and since it is only weighted
         // in by a certain amount anyway later, having that exact is meaningless. (c) MasterZap
         ax *= (1.0f / GRAVITY_CMSS);
@@ -507,6 +507,7 @@ void imuUpdateAccelerometer(void)
 #endif
 }
 
+//TODO rename it, since its not updating gyro anymore
 void imuUpdateGyroAndAttitude(void)
 {
     /* Calculate dT */
@@ -516,7 +517,8 @@ void imuUpdateGyroAndAttitude(void)
     previousIMUUpdateTime = currentTime;
 
     /* Update gyroscope */
-    gyroUpdate();
+    //No, we do not, gyro is updated somewhere else
+    // gyroUpdate();
 
     if (sensors(SENSOR_ACC) && isAccelUpdatedAtLeastOnce) {
 #ifdef HIL
