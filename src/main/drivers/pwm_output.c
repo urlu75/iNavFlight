@@ -106,7 +106,16 @@ static pwmOutputPort_t *pwmOutConfig(const timerHardware_t *timerHardware, uint8
     pwmOutputPort_t *p = &pwmOutputPorts[allocatedOutputPortCount++];
 
     configTimeBase(timerHardware->tim, period, mhz);
-    pwmGPIOConfig(IO_GPIOBYTAG(timerHardware->tag), IO_PINBYTAG(timerHardware->tag), Mode_AF_PP);
+
+    // If actuators are disabled we configure output as GPIO and drive it low
+    if (feature(FEATURE_ACTUATOR_ENABLE)) {
+        pwmGPIOConfig(IO_GPIOBYTAG(timerHardware->tag), IO_PINBYTAG(timerHardware->tag), Mode_AF_PP);
+    }
+    else {
+        IOInit(timerHardware->tag, OWNER_TIMER, RESOURCE_OUTPUT, 0);
+        IOConfigGPIO(timerHardware->tag, IOCFG_OUT_OD);
+        IOLo(timerHardware->tag);
+    }
 
     pwmOCConfig(timerHardware->tim, timerHardware->channel, value, timerHardware->output & TIMER_OUTPUT_INVERTED);
     if (timerHardware->output & TIMER_OUTPUT_ENABLED) {

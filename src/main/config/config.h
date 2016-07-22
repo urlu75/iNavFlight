@@ -25,7 +25,7 @@
 typedef enum {
     FEATURE_RX_PPM = 1 << 0,
     FEATURE_VBAT = 1 << 1,
-    //FEATURE_INFLIGHT_ACC_CAL = 1 << 2,
+    FEATURE_ACTUATOR_ENABLE = 1 << 2,
     FEATURE_RX_SERIAL = 1 << 3,
     FEATURE_MOTOR_STOP = 1 << 4,
     FEATURE_SERVO_TILT = 1 << 5,
