@@ -575,7 +575,7 @@ static void resetConf(void)
     masterConfig.looptime = 2000;
     masterConfig.i2c_overclock = 0;
     masterConfig.gyroSync = 0;
-    masterConfig.gyroSyncDenominator = 2;
+    masterConfig.gyroSyncDenominator = 8;
 
     resetPidProfile(&currentProfile->pidProfile);
 
@@ -927,8 +927,8 @@ static void validateAndFixConfig(void)
 
 #ifdef STM32F10X
     // avoid overloading the CPU on F1 targets when using gyro sync and GPS.
-    if (masterConfig.gyroSync && masterConfig.gyroSyncDenominator < 2 && featureConfigured(FEATURE_GPS)) {
-        masterConfig.gyroSyncDenominator = 2;
+    if (masterConfig.gyroSyncDenominator < 8 && featureConfigured(FEATURE_GPS)) {
+        masterConfig.gyroSyncDenominator = 8;
     }
 
     // avoid overloading the CPU when looptime < 2000 and GPS
