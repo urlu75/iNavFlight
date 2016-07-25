@@ -532,8 +532,9 @@ void taskMainPidLoop(void)
     cycleTime = getTaskDeltaTime(TASK_SELF);
     dT = (float)cycleTime * 0.000001f;
 
-    imuUpdateAccelerometer();
-    imuUpdateGyroAndAttitude();
+    //Acc and IMU moved to separate task
+    // imuUpdateAccelerometer();
+    // imuUpdateGyroAndAttitude();
 
     annexCode();
 
@@ -633,14 +634,6 @@ void taskMainPidLoop(void)
 #endif
 }
 
-// Function for loop trigger
-void taskMainPidLoopChecker(void) {
-    /*
-     * Right now we run it with much lower precission since we do not do gyro here
-     */
-    taskMainPidLoop();
-}
-
 /*
  * This task does only gyro reading and filtering
  */
@@ -658,6 +651,13 @@ void taskGyro(void) {
     }
 
     gyroUpdate();
+}
+
+void taskAcc(void) {
+    debug[1] = getTaskDeltaTime(TASK_SELF);
+
+    imuUpdateAccelerometer();
+    imuUpdateGyroAndAttitude();
 }
 
 void taskHandleSerial(void)
