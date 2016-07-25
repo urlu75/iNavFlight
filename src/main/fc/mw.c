@@ -640,7 +640,7 @@ void taskMainPidLoop(void)
 void taskGyro(void) {
     uint32_t currentDeltaTime = getTaskDeltaTime(TASK_SELF);
 
-    debug[0] = currentDeltaTime;
+    // debug[0] = currentDeltaTime;
 
     if (masterConfig.gyroSync) {
         while (1) {
@@ -654,7 +654,7 @@ void taskGyro(void) {
 }
 
 void taskAcc(void) {
-    debug[1] = getTaskDeltaTime(TASK_SELF);
+    // debug[1] = getTaskDeltaTime(TASK_SELF);
 
     imuUpdateAccelerometer();
     imuUpdateGyroAndAttitude();
