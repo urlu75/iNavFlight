@@ -20,7 +20,7 @@
 #define MAX_PROFILE_COUNT 3
 #define MAX_CONTROL_RATE_PROFILE_COUNT 3
 #define ONESHOT_FEATURE_CHANGED_DELAY_ON_BOOT_MS 1500
-
+#define ACC_TASK_FREQUENCY 120;
 
 typedef enum {
     FEATURE_RX_PPM = 1 << 0,
@@ -50,6 +50,7 @@ typedef enum {
     FEATURE_VTX = 1 << 24,
     FEATURE_RX_NRF24 = 1 << 25,
     FEATURE_SOFTSPI = 1 << 26,
+    FEATURE_RACE = 1 << 27,
 } features_e;
 
 typedef enum {
@@ -99,3 +100,4 @@ void applyAndSaveBoardAlignmentDelta(int16_t roll, int16_t pitch);
 uint16_t getCurrentMinthrottle(void);
 
 uint32_t getLooptime(void);
+uint32_t getAccUpdateFrequency(void);
