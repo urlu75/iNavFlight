@@ -48,6 +48,7 @@
 #include "drivers/accgyro.h"
 #include "drivers/compass.h"
 #include "drivers/pwm_mapping.h"
+#include "drivers/pwm_output.h"
 #include "drivers/pwm_rx.h"
 #include "drivers/pwm_output.h"
 #include "drivers/adc.h"
@@ -262,13 +263,21 @@ void init(void)
     pwm_params.servoPwmRate = masterConfig.servo_pwm_rate;
 #endif
 
-    pwm_params.useOneshot = feature(FEATURE_ONESHOT125);
+    pwm_params.pwmProtocolType = masterConfig.motor_pwm_protocol;
+    pwm_params.useFastPwm = (masterConfig.motor_pwm_protocol == PWM_TYPE_ONESHOT125) || 
+                            (masterConfig.motor_pwm_protocol == PWM_TYPE_ONESHOT42) ||
+                            (masterConfig.motor_pwm_protocol == PWM_TYPE_MULTISHOT);
     pwm_params.motorPwmRate = masterConfig.motor_pwm_rate;
     pwm_params.idlePulse = masterConfig.escAndServoConfig.mincommand;
-    if (feature(FEATURE_3D))
+    if (feature(FEATURE_3D)) {
         pwm_params.idlePulse = masterConfig.flight3DConfig.neutral3d;
-    if (pwm_params.motorPwmRate > 500)
+    }
+
+    if (masterConfig.motor_pwm_protocol == PWM_TYPE_BRUSHED) {
+        pwm_params.useFastPwm = false;
+        featureClear(FEATURE_3D);
         pwm_params.idlePulse = 0; // brushed motors
+    }
 
 #ifndef SKIP_RX_PWM_PPM
     pwmRxInit(masterConfig.inputFilteringMode);
@@ -279,7 +288,7 @@ void init(void)
 
     mixerUsePWMIOConfiguration();
 
-    if (!feature(FEATURE_ONESHOT125))
+    if (!pwm_params.useFastPwm)
         motorControlEnable = true;
 
     systemState |= SYSTEM_STATE_MOTORS_READY;
