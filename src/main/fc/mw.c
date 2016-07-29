@@ -655,9 +655,12 @@ void taskGyro(void) {
     gyroUpdate();
 }
 
+void taskAttitude(void) {
+    imuUpdateAttitude();
+}
+
 void taskAcc(void) {
     imuUpdateAccelerometer();
-    imuUpdateAttitude();
 }
 
 void taskHandleSerial(void)
