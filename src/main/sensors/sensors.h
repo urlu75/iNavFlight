@@ -23,6 +23,8 @@ typedef enum {
     SENSOR_INDEX_BARO,
     SENSOR_INDEX_MAG,
     SENSOR_INDEX_RANGEFINDER,
+    SENSOR_INDEX_GPS,               // Place-holder, not used
+    SENSOR_INDEX_OPTICAL_FLOW,
     SENSOR_INDEX_COUNT
 } sensorIndex_e;
 
@@ -48,6 +50,7 @@ typedef enum {
     SENSOR_MAG = 1 << 3,
     SENSOR_SONAR = 1 << 4,
     SENSOR_GPS = 1 << 5,
+    SENSOR_OPTICAL_FLOW = 1 << 6,
 } sensors_e;
 
 typedef enum {

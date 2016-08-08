@@ -454,6 +454,7 @@ HIGHEND_SRC = \
             io/display.c \
             sensors/rangefinder.c \
             sensors/barometer.c \
+            sensors/opflow.c \
             telemetry/telemetry.c \
             telemetry/frsky.c \
             telemetry/hott.c \
