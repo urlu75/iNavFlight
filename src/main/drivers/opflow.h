@@ -18,7 +18,14 @@
 #pragma once
 
 typedef struct opflow_data_s {
-    int16_t delta[2];
+    union {
+        int16_t A[2];
+        struct {
+            int16_t X;
+            int16_t Y;
+        } V;
+    } delta;
+
     int16_t quality;
 } opflow_data_t;
 

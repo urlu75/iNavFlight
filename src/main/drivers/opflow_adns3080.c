@@ -181,11 +181,13 @@ bool opflowADNS3080Read(int16_t *opflowDataPtr)
     opflow_data_t * opflowData = (opflow_data_t*)opflowDataPtr;
     uint8_t buf[4];
 
+    memset(opflowData, 0, sizeof(opflow_data_t));
+
     ADNS3080_ReadBuf(ADNS3080_MOTION_BURST, buf, 4);
 
     if (buf[0] & ADNS3080_MOTION_FLAG_MOT) {
-        opflowData->delta[0] = (int8_t)buf[1];
-        opflowData->delta[1] = (int8_t)buf[2];
+        opflowData->delta.A[0] = (int8_t)buf[1];
+        opflowData->delta.A[1] = (int8_t)buf[2];
         opflowData->quality = (uint8_t)buf[3];
 
         return true;
@@ -205,6 +207,11 @@ bool opflowADNS3080Detect(opflow_t *opflow)
     opflowPtr = opflow;
 
     ADNS3080_SpiInit();
+    delay(25);
+
+    // Do a dummy read to avoid clocking issues
+    ADNS3080_ReadReg(ADNS3080_PRODUCT_ID);
+    delay(25);
 
     const uint8_t reg = ADNS3080_ReadReg(ADNS3080_PRODUCT_ID);
 

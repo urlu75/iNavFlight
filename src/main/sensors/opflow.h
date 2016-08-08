@@ -24,5 +24,13 @@ typedef enum {
     OPTICAL_FLOW_ADNS3080
 } opticalFlowType_e;
 
+typedef struct {
+    int     flowQuality;          // 0 to 100
+    float   flowVelX;
+    float   flowVelY;
+} opticalFlowData_t;
+
 extern opflow_t opflow;
+extern opticalFlowData_t opticalFlow;
+
 extern void taskProcessOpticalFlow(void);

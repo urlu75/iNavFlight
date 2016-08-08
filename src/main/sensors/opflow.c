@@ -28,6 +28,9 @@
 #include "debug.h"
 
 #include "common/maths.h"
+#include "common/filter.h"
+
+#include "scheduler/scheduler.h"
 
 #include "config/config.h"
 #include "config/runtime_config.h"
@@ -40,21 +43,49 @@
 #include "sensors/opflow.h"
 #include "sensors/battery.h"
 
+// Driver access functions
 opflow_t opflow;
+
+// Optical flow output
+opticalFlowData_t opticalFlow;
+
+// Optical flow data LPF
+static pt1Filter_t opflowVelXLpfState;
+static pt1Filter_t opflowVelYLpfState;
+
+#define OPTICAL_FLOW_LOWPASS_HZ         20.0f
 
 void taskProcessOpticalFlow(void)
 {
+    const float opflowDt = getTaskDeltaTime(TASK_SELF) * 1e-6f;
     opflow_data_t driverFlowData;
 
     if (!sensors(SENSOR_OPTICAL_FLOW)) {
         return;
     }
 
+    /* We receive raw motion data from the sensor (X - forward, Y - right coordinated), we need to compensate them for pitch and roll rate as aircraft rotation introduces change
+     * in what the sensor sees and we receive that as "fake" motion. We also need to scale the motion according to FOV. We can't scale the motion to real units as we don't know the
+     * altitude of the drone - we leave that high level processing to INAV Position Estimation core.
+     */
     if (opflow.read((int16_t *)&driverFlowData)) {
-        debug[0] = driverFlowData.delta[0];
-        debug[1] = driverFlowData.delta[1];
+        /*
+        debug[0] = driverFlowData.delta.V.X;
+        debug[1] = driverFlowData.delta.V.Y;
         debug[2] = driverFlowData.quality;
+        */
     }
+    else {
+        driverFlowData.delta.V.X = 0;
+        driverFlowData.delta.V.Y = 0;
+    }
+
+    opticalFlow.flowVelX = pt1FilterApply4(&opflowVelXLpfState, driverFlowData.delta.V.X, OPTICAL_FLOW_LOWPASS_HZ, opflowDt);
+    opticalFlow.flowVelY = pt1FilterApply4(&opflowVelYLpfState, driverFlowData.delta.V.Y, OPTICAL_FLOW_LOWPASS_HZ, opflowDt);
+
+    debug[0] = opticalFlow.flowVelX;
+    debug[1] = opticalFlow.flowVelY;
+    debug[2] = driverFlowData.quality;
 }
 
 #endif
