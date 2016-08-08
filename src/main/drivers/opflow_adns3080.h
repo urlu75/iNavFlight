@@ -17,5 +17,5 @@
 
 #pragma once
 
-
-bool opflowADNS3080Detect(opflow_t *opflow);
+struct opflow_s;
+bool opflowADNS3080Detect(struct opflow_s *opflow);

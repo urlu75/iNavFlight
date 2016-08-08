@@ -24,7 +24,7 @@ typedef enum {
     OPTICAL_FLOW_ADNS3080
 } opticalFlowType_e;
 
-typedef struct {
+typedef struct opticalFlowData_s {
     int     flowQuality;          // 0 to 100
     float   flowVelX;
     float   flowVelY;
