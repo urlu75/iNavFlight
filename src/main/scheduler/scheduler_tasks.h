@@ -26,6 +26,7 @@ void taskUpdateBattery(void);
 bool taskUpdateRxCheck(uint32_t currentDeltaTime);
 void taskUpdateRxMain(void);
 void taskProcessGPS(void);
+void taskProcessOpticalFlow(void);
 void taskUpdateCompass(void);
 void taskUpdateBaro(void);
 void taskUpdateSonar(void);

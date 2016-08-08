@@ -596,6 +596,9 @@ int main(void)
 #endif
     setTaskEnabled(TASK_BATTERY, feature(FEATURE_VBAT) || feature(FEATURE_CURRENT_METER));
     setTaskEnabled(TASK_RX, true);
+#ifdef OPTICAL_FLOW
+    setTaskEnabled(TASK_OPFLOW, sensors(SENSOR_OPTICAL_FLOW));
+#endif
 #ifdef GPS
     setTaskEnabled(TASK_GPS, feature(FEATURE_GPS));
 #endif

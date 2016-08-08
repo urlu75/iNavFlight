@@ -25,3 +25,4 @@ typedef enum {
 } opticalFlowType_e;
 
 extern opflow_t opflow;
+extern void taskProcessOpticalFlow(void);

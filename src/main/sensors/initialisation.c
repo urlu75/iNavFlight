@@ -779,7 +779,8 @@ bool sensorsAutodetect(sensorAlignmentConfig_t *sensorAlignmentConfig, uint8_t g
     detectOpticalFlow();
 
     if (sensors(SENSOR_OPTICAL_FLOW)) {
-        //opflow.init();
+        delay(10);
+        opflow.init();
     }
 #endif
 

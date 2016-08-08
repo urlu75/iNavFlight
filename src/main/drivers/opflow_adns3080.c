@@ -38,15 +38,27 @@
 static opflow_t *opflowPtr;
 
 // Register Map for the ADNS3080 Optical OpticalFlow Sensor
-#define ADNS3080_PRODUCT_ID            0x00
-#define ADNS3080_MOTION                0x02
-#define ADNS3080_DELTA_X               0x03
-#define ADNS3080_DELTA_Y               0x04
-#define ADNS3080_SQUAL                 0x05
-#define ADNS3080_CONFIGURATION_BITS    0x0A
-#define ADNS3080_MOTION_CLEAR          0x12
-#define ADNS3080_FRAME_CAPTURE         0x13
-#define ADNS3080_MOTION_BURST          0x50
+#define ADNS3080_PRODUCT_ID             0x00
+#define ADNS3080_MOTION                 0x02
+#define ADNS3080_DELTA_X                0x03
+#define ADNS3080_DELTA_Y                0x04
+#define ADNS3080_SQUAL                  0x05
+#define ADNS3080_CONFIGURATION_BITS     0x0A
+#define ADNS3080_EXTENDED_CONFIG        0x0B
+#define ADNS3080_MOTION_CLEAR           0x12
+#define ADNS3080_FRAME_CAPTURE          0x13
+#define ADNS3080_MOTION_BURST           0x50
+
+#define ADNS3080_MOTION_FLAG_MOT        0x80
+#define ADNS3080_MOTION_FLAG_OVF        0x10
+#define ADNS3080_MOTION_FLAG_RES1600    0x01
+
+#define ADNS3080_CONFIG_RES1600         0x10
+
+#define ADNS3080_ECONFIG_NOPULLUP       0x04
+#define ADNS3080_ECONFIG_NOAGC          0x02
+#define ADNS3080_ECONFIG_FIXEDFR        0x01
+
 
 // ADNS3080 hardware config
 #define ADNS3080_PIXELS_X              30
@@ -57,7 +69,7 @@ static opflow_t *opflowPtr;
 
 #define DISABLE_ADNS3080()      {GPIO_SetBits(ADNS3080_CSN_GPIO, ADNS3080_CSN_PIN);}
 #define ENABLE_ADNS3080()       {GPIO_ResetBits(ADNS3080_CSN_GPIO, ADNS3080_CSN_PIN);}
-#define DELAY_ADNS3080()        { volatile int i = 500; while (i) { i--; } }
+#define DELAY_ADNS3080()        { volatile int i = 750; while (i) { i--; } }
 
 
 #ifdef USE_OPTICAL_FLOW_ADNS3080_SOFTSPI
@@ -145,17 +157,39 @@ static uint8_t ADNS3080_ReadReg(uint8_t reg)
     return ret;
 }
 
+static void ADNS3080_ReadBuf(uint8_t reg, uint8_t * buf, int length)
+{
+    ENABLE_ADNS3080();
+    ADNS3080_TransferByte(reg);
+    DELAY_ADNS3080();
+    for (int i = 0; i < length; i++) {
+        buf[i] = ADNS3080_TransferByte(0xFF);
+    }
+    DISABLE_ADNS3080();
+}
+
 void opflowADNS3080Init(void)
 {
+    uint8_t config;
+
+    config = ADNS3080_ReadReg(ADNS3080_CONFIGURATION_BITS);
+    ADNS3080_WriteReg(ADNS3080_CONFIGURATION_BITS, config | ADNS3080_CONFIG_RES1600); // Set resolution to 1600 counts per inch
 }
 
 bool opflowADNS3080Read(int16_t *opflowDataPtr)
 {
     opflow_data_t * opflowData = (opflow_data_t*)opflowDataPtr;
+    uint8_t buf[4];
 
-    opflowData->delta[0] = 0;
-    opflowData->delta[1] = 0;
-    opflowData->quality = 0;
+    ADNS3080_ReadBuf(ADNS3080_MOTION_BURST, buf, 4);
+
+    if (buf[0] & ADNS3080_MOTION_FLAG_MOT) {
+        opflowData->delta[0] = (int8_t)buf[1];
+        opflowData->delta[1] = (int8_t)buf[2];
+        opflowData->quality = (uint8_t)buf[3];
+
+        return true;
+    }
 
     return false;
 }

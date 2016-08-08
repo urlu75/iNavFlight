@@ -25,6 +25,7 @@
 #ifdef OPTICAL_FLOW
 
 #include "build_config.h"
+#include "debug.h"
 
 #include "common/maths.h"
 
@@ -40,6 +41,21 @@
 #include "sensors/battery.h"
 
 opflow_t opflow;
+
+void taskProcessOpticalFlow(void)
+{
+    opflow_data_t driverFlowData;
+
+    if (!sensors(SENSOR_OPTICAL_FLOW)) {
+        return;
+    }
+
+    if (opflow.read((int16_t *)&driverFlowData)) {
+        debug[0] = driverFlowData.delta[0];
+        debug[1] = driverFlowData.delta[1];
+        debug[2] = driverFlowData.quality;
+    }
+}
 
 #endif
 

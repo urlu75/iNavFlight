@@ -67,6 +67,15 @@ cfTask_t cfTasks[TASK_COUNT] = {
         .staticPriority = TASK_PRIORITY_HIGH,
     },
 
+#ifdef OPTICAL_FLOW
+    [TASK_OPFLOW] = {
+        .taskName = "OPFLOW",
+        .taskFunc = taskProcessOpticalFlow,
+        .desiredPeriod = 1000000 / 250,         // The more - the better
+        .staticPriority = TASK_PRIORITY_MEDIUM,
+    },
+#endif
+
 #ifdef GPS
     [TASK_GPS] = {
         .taskName = "GPS",

@@ -47,6 +47,9 @@ typedef enum {
     TASK_BEEPER,
     TASK_BATTERY,
     TASK_RX,
+#ifdef OPTICAL_FLOW
+    TASK_OPFLOW,
+#endif
 #ifdef GPS
     TASK_GPS,
 #endif
