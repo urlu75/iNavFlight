@@ -54,6 +54,10 @@
 #define BMP280_SPI_INSTANCE     SPI2
 #define BMP280_CS_PIN           PB5
 
+#define MAG
+#define USE_MAG_HMC5883
+#define USE_MAG_MAG3110
+
 #define USE_UART1
 #define USE_UART2
 #define USE_UART3
@@ -92,12 +96,30 @@
 
 #define GPS
 
+#define NAV
+#define NAV_AUTO_MAG_DECLINATION
+#define NAV_GPS_GLITCH_DETECTION
+#define NAV_MAX_WAYPOINTS       60
+
 #define DEFAULT_FEATURES        FEATURE_VBAT
 #define DEFAULT_RX_FEATURE      FEATURE_RX_SERIAL
 #define SERIALRX_PROVIDER       SERIALRX_SBUS
 #define SERIALRX_UART           SERIAL_PORT_USART2
-#define TARGET_CONFIG
 #define RX_CHANNELS_TAER
+
+#ifdef AIRHEROF3_QUAD
+    #define USE_I2C
+    #define I2C_DEVICE              (I2CDEV_1) // SDA (PB9/AF4), SCL (PB8/AF4)
+
+    #define I2C1_SCL_PIN            PB8
+    #define I2C1_SDA_PIN            PB9
+
+    #define TARGET_MOTOR_COUNT          4
+    #define USABLE_TIMER_CHANNEL_COUNT  12
+#else
+    #define TARGET_MOTOR_COUNT          6
+    #define USABLE_TIMER_CHANNEL_COUNT  14
+#endif
 
 #define SPEKTRUM_BIND
 // USART3,
@@ -111,5 +133,4 @@
 #define TARGET_IO_PORTD         0xffff
 #define TARGET_IO_PORTF         (BIT(4))
 
-#define USABLE_TIMER_CHANNEL_COUNT 14
 #define USED_TIMERS             ( TIM_N(1) | TIM_N(2) | TIM_N(3) | TIM_N(4) )
