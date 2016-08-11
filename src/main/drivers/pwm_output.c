@@ -31,7 +31,7 @@
 #include "drivers/io_pca9685.h"
 #include "io/pwmdriver_i2c.h"
 #include "config/config.h"
-#include "config/runtime_config.h"
+#include "fc/runtime_config.h"
 
 #if (MAX_MOTORS > MAX_SERVOS)
 #define MAX_PWM_OUTPUT_PORTS MAX_MOTORS
