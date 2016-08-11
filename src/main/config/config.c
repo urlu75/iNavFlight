@@ -442,6 +442,10 @@ uint32_t getAccUpdateFrequency(void) {
     }
 }
 
+uint8_t getAsyncMode(void) {
+    return masterConfig.asyncMode;
+}
+
 uint8_t getCurrentProfile(void)
 {
     return masterConfig.current_profile_index;
@@ -584,7 +588,8 @@ static void resetConf(void)
     masterConfig.i2c_overclock = 0;
     masterConfig.gyroSync = 0;
     masterConfig.gyroSyncDenominator = 8;
-    masterConfig.accTaskFrequency = ACC_TASK_FREQUENCY;
+    masterConfig.accTaskFrequency = ACC_TASK_FREQUENCY_DEFAULT;
+    masterConfig.asyncMode = ASYNC_MODE_NONE;
 
     resetPidProfile(&currentProfile->pidProfile);
 

@@ -446,6 +446,10 @@ static const char * const lookupTableAuxOperator[] = {
     "OR", "AND"
 };
 
+static const char * const lookupTableAsyncMode[] = {
+    "NONE", "GYRO", "ALL"
+};
+
 typedef struct lookupTableEntry_s {
     const char * const *values;
     const uint8_t valueCount;
@@ -481,6 +485,7 @@ typedef enum {
     TABLE_NAV_RTH_ALT_MODE,
 #endif
     TABLE_AUX_OPERATOR,
+    TABLE_ASYNC_MODE
 } lookupTableIndex_e;
 
 static const lookupTableEntry_t lookupTables[] = {
@@ -513,6 +518,7 @@ static const lookupTableEntry_t lookupTables[] = {
     { lookupTableNavRthAltMode, sizeof(lookupTableNavRthAltMode) / sizeof(char *) },
 #endif
     { lookupTableAuxOperator, sizeof(lookupTableAuxOperator) / sizeof(char *) },
+    { lookupTableAsyncMode, sizeof(lookupTableAsyncMode) / sizeof(char *) },
 };
 
 #define VALUE_TYPE_OFFSET 0
@@ -569,7 +575,8 @@ const clivalue_t valueTable[] = {
     { "i2c_overclock",              VAR_UINT8  | MASTER_VALUE | MODE_LOOKUP,  &masterConfig.i2c_overclock, .config.lookup = { TABLE_OFF_ON }, 0 },
     { "gyro_sync",                  VAR_UINT8  | MASTER_VALUE | MODE_LOOKUP,  &masterConfig.gyroSync, .config.lookup = { TABLE_OFF_ON } },
     { "gyro_sync_denom",            VAR_UINT8  | MASTER_VALUE,  &masterConfig.gyroSyncDenominator, .config.minmax = { 1,  32 } },
-    { "acc_task_frequency",         VAR_UINT16 | MASTER_VALUE,  &masterConfig.accTaskFrequency, .config.minmax = { 15,  1000 } },
+    { "acc_task_frequency",         VAR_UINT16 | MASTER_VALUE,  &masterConfig.accTaskFrequency, .config.minmax = { ACC_TASK_FREQUENCY_MIN,  ACC_TASK_FREQUENCY_MAX } },
+    { "async_mode",                 VAR_UINT8  | MASTER_VALUE,  &masterConfig.asyncMode, .config.lookup = { TABLE_ASYNC_MODE } },
 
     { "mid_rc",                     VAR_UINT16 | MASTER_VALUE,  &masterConfig.rxConfig.midrc, .config.minmax = { 1200,  1700 }, 0 },
     { "min_check",                  VAR_UINT16 | MASTER_VALUE,  &masterConfig.rxConfig.mincheck, .config.minmax = { PWM_RANGE_ZERO,  PWM_RANGE_MAX }, 0 },
