@@ -82,24 +82,27 @@ endif
 # silently ignore if the file is not present. Allows for target specific.
 -include $(ROOT)/src/main/target/$(BASE_TARGET)/target.mk
 
-F4_TARGETS      = $(F405_TARGETS) $(F411_TARGETS)
+F4_TARGETS      = $(F405_TARGETS) $(F411_TARGETS) $(F427_TARGETS)
 
 ifeq ($(filter $(TARGET),$(VALID_TARGETS)),)
 $(error Target '$(TARGET)' is not valid, must be one of $(VALID_TARGETS). Have you prepared a valid target.mk?)
 endif
 
 ifeq ($(filter $(TARGET),$(F1_TARGETS) $(F3_TARGETS) $(F4_TARGETS)),)
-$(error Target '$(TARGET)' has not specified a valid STM group, must be one of F1, F3, F405, or F411. Have you prepared a valid target.mk?)
+$(error Target '$(TARGET)' has not specified a valid STM group, must be one of F1, F3, F405, F411 or F427. Have you prepared a valid target.mk?)
 endif
 
 128K_TARGETS  = $(F1_TARGETS)
 256K_TARGETS  = $(F3_TARGETS)
 512K_TARGETS  = $(F411_TARGETS)
 1024K_TARGETS = $(F405_TARGETS)
+2048K_TARGETS = $(F427_TARGETS)
 
 # Configure default flash sizes for the targets (largest size specified gets hit first) if flash not specified already.
 ifeq ($(FLASH_SIZE),)
-ifeq ($(TARGET),$(filter $(TARGET),$(1024K_TARGETS)))
+ifeq ($(TARGET),$(filter $(TARGET),$(2048K_TARGETS)))
+FLASH_SIZE = 2048
+else ifeq ($(TARGET),$(filter $(TARGET),$(1024K_TARGETS)))
 FLASH_SIZE = 1024
 else ifeq ($(TARGET),$(filter $(TARGET),$(512K_TARGETS)))
 FLASH_SIZE = 512
@@ -214,6 +217,10 @@ ifeq ($(TARGET),$(filter $(TARGET), $(F411_TARGETS)))
 EXCLUDES += stm32f4xx_fsmc.c
 endif
 
+ifeq ($(TARGET),$(filter $(TARGET), $(F427_TARGETS)))
+EXCLUDES += stm32f4xx_fsmc.c
+endif
+
 STDPERIPH_SRC := $(filter-out ${EXCLUDES}, $(STDPERIPH_SRC))
 
 #USB
@@ -268,6 +275,9 @@ LD_SCRIPT       = $(LINKER_DIR)/stm32_flash_f411.ld
 else ifeq ($(TARGET),$(filter $(TARGET),$(F405_TARGETS)))
 DEVICE_FLAGS    = -DSTM32F40_41xxx
 LD_SCRIPT       = $(LINKER_DIR)/stm32_flash_f405.ld
+else ifeq ($(TARGET),$(filter $(TARGET),$(F427_TARGETS)))
+DEVICE_FLAGS    = -DSTM32F427_437xx
+LD_SCRIPT       = $(LINKER_DIR)/stm32_flash_f427.ld
 else
 $(error Unknown MCU for F4 target)
 endif
