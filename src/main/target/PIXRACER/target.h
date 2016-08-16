@@ -24,9 +24,9 @@
 
 #define USE_EXTI
 
-#define LED0                    PB3     //blue
-#define LED1                    PB1     //green
-#define LED2                    PB11    //red
+#define LED0                    PB11    //red
+#define LED1                    PB3     //blue
+#define LED2                    PB1     //green
 
 #define BEEPER                  PA15
 #define BEEPER_INVERTED
@@ -88,11 +88,33 @@
 #define UART1_RX_PIN            PB7
 #define UART1_TX_PIN            PB6
 
+#define USE_UART2
+#define UART2_RX_PIN            PD6
+#define UART2_TX_PIN            PD5
+
 #define USE_UART3
 #define UART3_RX_PIN            PD9
 #define UART3_TX_PIN            PD8
 
-#define SERIAL_PORT_COUNT       3 //VCP, UART1, UART3
+#define USE_UART4
+#define UART4_RX_PIN            PA1
+#define UART4_TX_PIN            PA0
+
+#define USE_UART6
+#define UART6_RX_PIN            PC7     // RX is used only (SerialRX)
+#define UART6_TX_PIN            PC6
+
+/*
+#define USE_UART7
+#define UART7_RX_PIN            PE7
+#define UART7_TX_PIN            PE8
+
+#define USE_UART8
+#define UART8_RX_PIN            PE0
+#define UART8_TX_PIN            PE1
+*/
+
+#define SERIAL_PORT_COUNT       6 //VCP, UART1, UART2, UART3, UART4
 
 #define USE_SPI
 
@@ -111,6 +133,9 @@
 #define USE_I2C
 #define I2C_DEVICE              (I2CDEV_1)
 #define USE_I2C_PULLUP
+#define I2C1_SCL                PB8
+#define I2C1_SDA                PB9
+
 
 #define BOARD_HAS_VOLTAGE_DIVIDER
 #define USE_ADC
