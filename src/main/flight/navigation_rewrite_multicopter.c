@@ -415,6 +415,11 @@ static void updatePositionAccelController_MC(uint32_t deltaMicros, float maxAcce
     int16_t maxBankAngle = DEGREES_TO_DECIDEGREES(posControl.navConfig->mc_max_bank_angle);
     posControl.rcAdjustment[ROLL] = constrain(RADIANS_TO_DECIDEGREES(desiredRoll), -maxBankAngle, maxBankAngle);
     posControl.rcAdjustment[PITCH] = constrain(RADIANS_TO_DECIDEGREES(desiredPitch), -maxBankAngle, maxBankAngle);
+
+    NAV_BLACKBOX_DEBUG(0, accelN);
+    NAV_BLACKBOX_DEBUG(1, accelE);
+    NAV_BLACKBOX_DEBUG(2, posControl.rcAdjustment[ROLL]);
+    NAV_BLACKBOX_DEBUG(3, posControl.rcAdjustment[PITCH]);
 }
 
 static void applyMulticopterPositionController(uint32_t currentTime)
