@@ -616,6 +616,7 @@ CFLAGS      += $(ARCH_FLAGS) \
 ASFLAGS     = $(ARCH_FLAGS) \
               -x assembler-with-cpp \
               $(addprefix -I,$(INCLUDE_DIRS)) \
+              -D$(TARGET) \
               -MMD -MP
 
 LDFLAGS     = -lm \
