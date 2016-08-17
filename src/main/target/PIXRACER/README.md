@@ -1,4 +1,4 @@
-# AnyFC
+# Pixracer
 
 * Target owner: @DigitalEntity
 * The Pixracer is the first autopilot of the new FMUv4 Pixhawk generation. It has Wifi built-in, comes with upgraded sensors and more flash.
