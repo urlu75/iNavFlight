@@ -609,6 +609,11 @@ static void updateEstimatedTopic(uint32_t currentTime)
             inavFilterPredict(Y, dt, posEstimator.imu.accelNEU.V.Y);
         }
 
+        NAV_BLACKBOX_DEBUG(0, posEstimator.imu.accelNEU.V.X);
+        NAV_BLACKBOX_DEBUG(1, posEstimator.imu.accelNEU.V.Y);
+        NAV_BLACKBOX_DEBUG(2, posEstimator.gps.vel.V.X);
+        NAV_BLACKBOX_DEBUG(3, posEstimator.gps.vel.V.Y);
+
         /* Correct position from GPS - always if GPS is valid */
         if (isGPSValid) {
             inavFilterCorrectPos(X, dt, posEstimator.gps.pos.V.X - posEstimator.history.pos[gpsHistoryIndex].V.X, posControl.navConfig->inav.w_xy_gps_p);
