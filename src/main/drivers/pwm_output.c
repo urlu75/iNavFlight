@@ -17,14 +17,11 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdlib.h>
 #include <math.h>
 
 #include "platform.h"
 
-#include "gpio.h"
 #include "io.h"
-#include "io_impl.h"
 #include "timer.h"
 #include "pwm_mapping.h"
 #include "pwm_output.h"
@@ -35,10 +32,17 @@
 #define MAX_PWM_OUTPUT_PORTS MAX_SERVOS
 #endif
 
+#if defined(STM32F40_41xxx) // must be multiples of timer clock
+#define ONESHOT125_TIMER_MHZ  12
+#define ONESHOT42_TIMER_MHZ   21
+#define MULTISHOT_TIMER_MHZ   84
+#define PWM_BRUSHED_TIMER_MHZ 21
+#else
 #define ONESHOT125_TIMER_MHZ  8
 #define ONESHOT42_TIMER_MHZ   24
 #define MULTISHOT_TIMER_MHZ   72
 #define PWM_BRUSHED_TIMER_MHZ 24
+#endif
 
 #define MULTISHOT_5US_PW    (MULTISHOT_TIMER_MHZ * 5)
 #define MULTISHOT_20US_MULT (MULTISHOT_TIMER_MHZ * 20 / 1000.0f)
@@ -102,22 +106,15 @@ static void pwmOCConfig(TIM_TypeDef *tim, uint8_t channel, uint16_t value, uint8
     }
 }
 
-static void pwmGPIOConfig(GPIO_TypeDef *gpio, uint32_t pin, GPIO_Mode mode)
-{
-    gpio_config_t cfg;
-
-    cfg.pin = pin;
-    cfg.mode = mode;
-    cfg.speed = Speed_2MHz;
-    gpioInit(gpio, &cfg);
-}
-
 static pwmOutputPort_t *pwmOutConfig(const timerHardware_t *timerHardware, uint8_t mhz, uint16_t period, uint16_t value)
 {
     pwmOutputPort_t *p = &pwmOutputPorts[allocatedOutputPortCount++];
 
     configTimeBase(timerHardware->tim, period, mhz);
-    pwmGPIOConfig(IO_GPIOBYTAG(timerHardware->tag), IO_PINBYTAG(timerHardware->tag), Mode_AF_PP);
+
+    const IO_t io = IOGetByTag(timerHardware->tag);
+    IOInit(io, OWNER_MOTOR, RESOURCE_OUTPUT, allocatedOutputPortCount);
+    IOConfigGPIO(io, IOCFG_AF_PP);
 
     pwmOCConfig(timerHardware->tim, timerHardware->channel, value, timerHardware->output & TIMER_OUTPUT_INVERTED);
     if (timerHardware->output & TIMER_OUTPUT_ENABLED) {
