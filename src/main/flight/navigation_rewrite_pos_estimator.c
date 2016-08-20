@@ -609,8 +609,8 @@ static void updateEstimatedTopic(uint32_t currentTime)
             inavFilterPredict(Y, dt, posEstimator.imu.accelNEU.V.Y);
         }
 
-        NAV_BLACKBOX_DEBUG(0, posEstimator.imu.accelNEU.V.X);
-        NAV_BLACKBOX_DEBUG(1, posEstimator.imu.accelNEU.V.Y);
+        NAV_BLACKBOX_DEBUG(0, posEstimator.gps.pos.V.X);
+        NAV_BLACKBOX_DEBUG(1, posEstimator.gps.pos.V.Y);
         NAV_BLACKBOX_DEBUG(2, posEstimator.gps.vel.V.X);
         NAV_BLACKBOX_DEBUG(3, posEstimator.gps.vel.V.Y);
 
